@@ -1,0 +1,25 @@
+{
+    "name": "jwt_node",
+    "version": "1.0.0",
+    "description": "",
+    "main": "index.js",
+    "scripts": {
+        "start": "nodemon index"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/peterhyun1234/JWT_node.git"
+    },
+    "author": "",
+    "license": "ISC",
+    "bugs": {
+        "url": "https://github.com/peterhyun1234/JWT_node/issues"
+    },
+    "homepage": "https://github.com/peterhyun1234/JWT_node#readme",
+    "devDependencies": {
+        "nodemon": "^2.0.2"
+    },
+    "dependencies": {
+        "jsonwebtoken": "^8.5.1"
+    }
+}
