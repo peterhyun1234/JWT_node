@@ -1,25 +1,43 @@
 var express = require('express');
 var router = express.Router();
-var { verifyToken } = require('../middleware/authCheck');
+var jwt = require('jsonwebtoken');
+var secretObj = require('../config/jwt');
+
+// 라우터 레벨 미들웨어 for authentification
+// 모든 api에 적용
+router.use(function(req, res, next) {
+    console.log('Time:', Date.now());
+
+    const requestToken = req.cookies.user;
+
+    try {
+        jwt.verify(requestToken, secretObj.secret);
+        next();
+    } catch (err) {
+        if (err.name === 'TokenExpiredError') {
+            console.log("access err: " + err.name);
+            res.send(err.name);
+        } else {
+            console.log("access err: " + err.name);
+            res.send(err.name);
+        }
+    }
+});
 
 
-router.get('/get_test', verifyToken, function(req, res) {
+router.get('/get_test', function(req, res) {
 
-    var tokenStatus = req.tokenStatus; // verifyToken을 거친 토큰 상태
-    console("tokenStatus: " + tokenStatus);
     var data = "get test";
     res.send(data);
 
 });
 
 
-router.post("/post_test", verifyToken, function(req, res, next) {
+router.post("/post_test", function(req, res, next) {
 
-    var tokenStatus = res.tokenStatus;
-    console("tokenStatus: " + tokenStatus);
-    //var recv_code = req.body.p_code;
+    var recvName = req.body.name;
     var data = "post test";
-    res.send(data);
+    res.send(recvName);
 
 });
 
