@@ -8,6 +8,8 @@ router.post('/make', function(req, res, next) {
 
     var recvName = req.body.name;
 
+    var expiration = "100m";
+
     var sendingData;
     //console("recvName: " + recvName);
 
@@ -26,12 +28,23 @@ router.post('/make', function(req, res, next) {
                     // jti: JWT 토큰 식별자(JWT ID), 중복 방지를 위해 사용하며, 일회용 토큰(Access Token) 등에 사용
             },
             secretObj.secret, {
-                expiresIn: "100m" // 유효시간 100분
+                expiresIn: expiration // 유효시간 100분
             }
         );
-        console.log(token);
         res.cookie("user", token);
-        sendingData = token;
+
+        sendingData = new Object();
+
+        var ip = req.headers['x-forwarded-for'] ||
+            req.connection.remoteAddress ||
+            req.socket.remoteAddress ||
+            req.connection.socket.remoteAddress;
+
+        sendingData.calling_IP = ip;
+        sendingData.date = Date.now();
+        sendingData.expiring_date = Date.now().setMinutes(Date.now().getMinutes() + 100);
+        sendingData.token = token;
+
         res.send(sendingData);
 
     } else { // access안 된 이름일 경우

@@ -2,9 +2,14 @@ var express = require('express');
 var createError = require('http-errors');
 var path = require('path');
 const bodyParser = require('body-parser');
+const cookieParser = require('cookie-parser');
 const router = express.Router();
 
 var app = express();
+
+
+app.use(cookieParser());
+
 
 app.set('port', process.env.PORT || 3345);
 
@@ -21,11 +26,6 @@ app.use((req, res, next) => {
     next()
 })
 
-// view engine setup
-app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'pug');
-
-
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, 'public')));
@@ -33,10 +33,11 @@ app.use(express.static(path.join(__dirname, 'public')));
 //Router 정의
 const apisRouter = require('./router/apis');
 const tokenRouter = require('./router/token');
+const testRouter = require('./router/test');
 
 app.use('/apis', apisRouter);
 app.use('/token', tokenRouter);
-
+app.use('/test', testRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
@@ -74,43 +75,3 @@ process.on('SIGINT', function() {
         process.exit();
     })
 });
-
-
-
-// var { verifyToken } = require('../authcheck');
-
-// router.get('/', verifyToken, function(req, res, next) {
-
-//         }
-
-//         var crypto = require('crypto');
-//         var jwt = require('jsonwebtoken');
-//         var secretObj = require('../config/jwt');
-
-
-//         router.post('/', function(req, res, next) {
-//             var email = req.body.email;
-//             var pass = req.body.pass;
-//             var token = jwt.sign({
-//                     email_add: email
-//                 },
-//                 secretObj.secret, {
-//                     expiresIn: '100m'
-//                 });
-
-//             var sqlString = 'SELECT password FROM user WHERE name="' + email + '";';
-//             con.query(sqlString, function(err, data) {
-//                 var password = data[0].password;
-//                 pass = crypto.createHash('sha256').update(pass).digest('base64');
-//                 if (err) throw err;
-//                 else {
-//                     if (pass == password) {
-//                         res.cookie("user", token);
-//                         res.cookie("email", email);
-//                         res.redirect('/index');
-//                     } else {
-//                         res.redirect('/login?allowed=not_allowed');
-//                     }
-//                 }
-//             });
-//         });
