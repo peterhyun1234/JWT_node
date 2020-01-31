@@ -9,7 +9,7 @@ router.use(function(req, res, next) {
 
     var bearerToken = req.headers.authorization.split(' ')[1];
 
-    console.log("bearerToken: " + bearerToken)
+    //console.log("bearerToken: " + bearerToken)
 
     const cookieToken = req.cookies.user;
 
